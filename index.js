@@ -45,31 +45,43 @@ function fakeDate({
     }
 
     toString() {
-      return `${this.toDateString()} ${this.toTimeString()}`;
+      if (isNaN(this.getTime())) {
+        return 'Invalid Date';
+      } else {
+        return `${this.toDateString()} ${this.toTimeString()}`;
+      }
     }
 
     toTimeString() {
       // '02:39:07 GMT-0600'
-      const { date } = PRIV.get(this);
-      const fudge = new Date(date.getTime() - timezoneCorrectionMillis);
-      const hour = leftPad(fudge.getHours(), 2);
-      const minute = leftPad(fudge.getMinutes(), 2);
-      const second = leftPad(fudge.getSeconds(), 2);
-      const sign = timezoneOffset < 0 ? '+' : '-';
-      const offsetHours = sign + leftPad(Math.floor(Math.abs(timezoneOffset) / 60), 2);
-      const offsetMinutes = leftPad(timezoneOffset % 60, 2);
-      return `${hour}:${minute}:${second} GMT${offsetHours}${offsetMinutes}`;
+      if (isNaN(this.getTime())) {
+        return 'Invalid Date';
+      } else {
+        const { date } = PRIV.get(this);
+        const fudge = new Date(date.getTime() - timezoneCorrectionMillis);
+        const hour = leftPad(fudge.getHours(), 2);
+        const minute = leftPad(fudge.getMinutes(), 2);
+        const second = leftPad(fudge.getSeconds(), 2);
+        const sign = timezoneOffset < 0 ? '+' : '-';
+        const offsetHours = sign + leftPad(Math.floor(Math.abs(timezoneOffset) / 60), 2);
+        const offsetMinutes = leftPad(timezoneOffset % 60, 2);
+        return `${hour}:${minute}:${second} GMT${offsetHours}${offsetMinutes}`;
+      }
     }
 
     toDateString() {
       // 'Wed Jul 01 1993'
-      const { date } = PRIV.get(this);
-      const fudge = new Date(date.getTime() - timezoneCorrectionMillis);
-      const dayOfWeek = DAYS_OF_WEEK[fudge.getDay()];
-      const month = MONTHS_OF_YEAR[fudge.getMonth()];
-      const dayOfMonth = leftPad(fudge.getDate(), 2);
-      const year = fudge.getFullYear();
-      return `${dayOfWeek} ${month} ${dayOfMonth} ${year}`;
+      if (isNaN(this.getTime())) {
+        return 'Invalid Date';
+      } else {
+        const { date } = PRIV.get(this);
+        const fudge = new Date(date.getTime() - timezoneCorrectionMillis);
+        const dayOfWeek = DAYS_OF_WEEK[fudge.getDay()];
+        const month = MONTHS_OF_YEAR[fudge.getMonth()];
+        const dayOfMonth = leftPad(fudge.getDate(), 2);
+        const year = fudge.getFullYear();
+        return `${dayOfWeek} ${month} ${dayOfMonth} ${year}`;
+      }
     }
 
     toLocaleString() {
