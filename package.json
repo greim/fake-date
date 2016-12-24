@@ -1,6 +1,6 @@
 {
   "name": "fake-date",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "util for mocking the Date API",
   "main": "index.js",
   "scripts": {
