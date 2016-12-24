@@ -42,7 +42,7 @@ setTimeout(() => console.log(FakeDate.now()), 100000); // 0
 
 ### `FakeDate` Static and Instance Methods
 
-The methods are the same as the `Date` class. See the (MDN docs)[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date] for details. The difference is that the concepts of *right now* and *timezone offset* are fixed and controlled by you, rather than being runtime/host-machine-dependent.
+The methods are the same as the `Date` class. See the [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) for details. The difference is that the concepts of *right now* and *timezone offset* are fixed and controlled by you, rather than being runtime/host-machine-dependent.
 
 ## Caveats and Questions
 
