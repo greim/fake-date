@@ -9,22 +9,24 @@ npm install fake-date
 ```js
 const fakeDate = require('fake-date');
 
-const FakeDate = fakeDate({
+const OldDate = global.Date;
+
+global.Date = fakeDate({
   timezoneOffset: 120,
   referenceTime: 1482568821977,
 });
 
-console.log(new FakeDate().getTimezoneOffset());
+console.log(new Date().getTimezoneOffset());
 // 120
 
-console.log(new FakeDate(2000, 0, 1).toISOString());
+console.log(new Date(2000, 0, 1).toISOString());
 // 2000-01-01T02:00:00.000Z
 
-console.log(FakeDate.now());
+console.log(Date.now());
 // 1482568821977
 
 setTimeout(() => {
-  console.log(FakeDate.now());
+  console.log(Date.now());
   // 1482568821977
 }, 100000);
 ```
