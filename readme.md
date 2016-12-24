@@ -14,7 +14,7 @@ const FakeDate = fakeDate({
   referenceTime: 1482568821977,
 });
 
-console.log(new FakeDate.getTimezoneOffset());
+console.log(new FakeDate().getTimezoneOffset());
 // 120
 
 console.log(new FakeDate(2000, 0, 1).toISOString());
