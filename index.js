@@ -2,46 +2,66 @@
 
 module.exports = fakeDate;
 
+const _global = global || window;
+const _Date = _global.Date;
+// using a function as it may varies depending on DST
+function nativeOffsetAt(d = _Date.now()) {
+  return new _Date(d).getTimezoneOffset();
+}
+
+
 function fakeDate({
   referenceTime = 0,
-  timezoneOffset = 0,
+  timezoneOffset = null,
 }) {
 
   validateTime(referenceTime, 'referenceTime');
   validateTime(timezoneOffset, 'timezoneOffset');
 
-  const nativeTimezoneOffset = new Date().getTimezoneOffset();
-  const timezoneCorrection = timezoneOffset - nativeTimezoneOffset;
-  const timezoneCorrectionMillis = timezoneCorrection * 60 * 1000;
+  function tzOffsetMillisFor(d) {
+    if (timezoneOffset === null) {
+      return 0;
+    }
+    return (timezoneOffset - nativeOffsetAt(d)) * 60 * 1000;
+  }
+  function timezoneFixer(time) {
+    return time + tzOffsetMillisFor(time);
+  }
+
+  function ts() {
+    return referenceTime === null ? _Date.now() : referenceTime;
+  }
 
   class MockDate {
 
     static now() {
-      return referenceTime;
+      return ts();
     }
 
     static UTC(...args) {
-      return Date.UTC(...args);
+      return _Date.UTC(...args);
     }
 
     static parse(dateString) {
       const isISO = isISODate(dateString);
       const hasTimeZone = dateStringHasTimezone(dateString);
       if (isISO || hasTimeZone) {
-        return Date.parse(dateString);
+        return _Date.parse(dateString);
       } else {
-        return Date.parse(dateString) + timezoneCorrectionMillis;
+        return timezoneFixer(_Date.parse(dateString));
       }
     }
 
     constructor(...args) {
-      args = correctArgs(args, timezoneCorrectionMillis, referenceTime);
-      const date = new Date(...args);
+      args = correctArgs(args, timezoneFixer, ts());
+      const date = new _Date(...args);
       PRIV.set(this, { date });
     }
 
     getTimezoneOffset() {
-      return timezoneOffset;
+      return timezoneOffset === null
+        ? nativeOffsetAt(this.valueOf())
+        : timezoneOffset;
     }
 
     toString() {
@@ -58,13 +78,14 @@ function fakeDate({
         return 'Invalid Date';
       } else {
         const { date } = PRIV.get(this);
-        const fudge = new Date(date.getTime() - timezoneCorrectionMillis);
+        const offset = timezoneOffset === null ? nativeOffsetAt(+date) : timezoneOffset;
+        const fudge = new _Date(+date - tzOffsetMillisFor(+date));
         const hour = leftPad(fudge.getHours(), 2);
         const minute = leftPad(fudge.getMinutes(), 2);
         const second = leftPad(fudge.getSeconds(), 2);
-        const sign = timezoneOffset < 0 ? '+' : '-';
-        const offsetHours = sign + leftPad(Math.floor(Math.abs(timezoneOffset) / 60), 2);
-        const offsetMinutes = leftPad(timezoneOffset % 60, 2);
+        const sign = offset < 0 ? '+' : '-';
+        const offsetHours = sign + leftPad(Math.floor(Math.abs(offset) / 60), 2);
+        const offsetMinutes = leftPad(offset % 60, 2);
         return `${hour}:${minute}:${second} GMT${offsetHours}${offsetMinutes}`;
       }
     }
@@ -75,7 +96,7 @@ function fakeDate({
         return 'Invalid Date';
       } else {
         const { date } = PRIV.get(this);
-        const fudge = new Date(date.getTime() - timezoneCorrectionMillis);
+        const fudge = new _Date(+date - tzOffsetMillisFor(+date));
         const dayOfWeek = DAYS_OF_WEEK[fudge.getDay()];
         const month = MONTHS_OF_YEAR[fudge.getMonth()];
         const dayOfMonth = leftPad(fudge.getDate(), 2);
@@ -106,9 +127,10 @@ function fakeDate({
   }
 
   for (const method of GET_METHODS) {
+    // eslint-disable-next-line no-loop-func
     MockDate.prototype[method] = function(...args) {
       const { date } = PRIV.get(this);
-      const fudge = new Date(date.getTime() - timezoneCorrectionMillis);
+      const fudge = new _Date(+date - tzOffsetMillisFor(+date));
       return fudge[method](...args);
     };
   }
@@ -121,11 +143,13 @@ function fakeDate({
   }
 
   for (const method of SET_METHODS) {
+    // eslint-disable-next-line no-loop-func
     MockDate.prototype[method] = function(...args) {
       const { date } = PRIV.get(this);
-      const fudge = new Date(date.getTime() - timezoneCorrectionMillis);
+      const offsetMs = tzOffsetMillisFor(+date);
+      const fudge = new _Date(+date - offsetMs);
       fudge[method](...args);
-      date.setTime(fudge.getTime() + timezoneCorrectionMillis);
+      date.setTime(+fudge + (isNaN(offsetMs) ? tzOffsetMillisFor(+fudge) : offsetMs));
       return date.getTime();
     };
   }
@@ -148,6 +172,9 @@ function fakeDate({
 }
 
 function validateTime(t, name) {
+  if (t === null) {
+    return;
+  }
   if (typeof t !== 'number') {
     throw new Error(`expected number for ${name} but found ${typeof t}`);
   } else if (!Number.isInteger(t)) {
@@ -163,16 +190,16 @@ const dateStringHasTimezone = (() => {
 })();
 
 const isISODate = (() => {
-  const isoDatePatt = /^\d\d\d\d\-\d\d\-\d\d/;
+  const isoDatePatt = /^\d{4}-\d{2}-\d{2}/;
   return function(dateStr) {
     return isoDatePatt.test(dateStr);
   };
 })();
 
 const correctArgs = (() => {
-  return function(args, timezoneCorrectionMillis, referenceTime) {
+  return function(args, tzFixer, timestamp) {
     if (args.length === 0) {
-      return [referenceTime];
+      return [timestamp];
     } else if (args.length === 1) {
       if (typeof args[0] === 'number') {
         return args;
@@ -182,11 +209,11 @@ const correctArgs = (() => {
         if (isISO || hasTimeZone) {
           return args;
         } else {
-          return [Date.parse(args[0]) + timezoneCorrectionMillis];
+          return [tzFixer(_Date.parse(args[0]))];
         }
       }
     } else {
-      return [Date.UTC(...args) + timezoneCorrectionMillis];
+      return [tzFixer(_Date.UTC(...args))];
     }
   };
 })();
