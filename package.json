@@ -13,6 +13,14 @@
     "time",
     "test"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greim/fake-date.git"
+  },
+  "bugs": {
+    "url": "https://github.com/greim/fake-date/issues"
+  },
+  "homepage": "https://github.com/greim/fake-date#readme",
   "author": "Greg Reimer <gregreimer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
