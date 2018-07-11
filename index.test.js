@@ -11,7 +11,7 @@ describe('fakeDate', () => {
       assert.strictEqual(typeof fakeDate, 'function');
     });
     it('requires option object', () => {
-      assert.throws(() => fakeDate(), /match/);
+      assert.throws(() => fakeDate(), /TypeError/);
     });
     it('allows empty option object', () => {
       fakeDate({});
@@ -117,7 +117,7 @@ describe('fakeDate', () => {
       });
       it('requires multiple args', () => {
         const FakeDate = fakeDate({});
-        const time = FakeDate.UTC(2016);
+        const time = FakeDate.UTC();
         assert.ok(isNaN(time));
       });
     });
