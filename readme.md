@@ -27,10 +27,12 @@ const FakeDate = fakeDate({
 
   // An integer representing minutes, reflecting
   // JS's Date#getTimezoneOffset() method
+  // if `null` it'll use the system's one
   timezoneOffset: 120, // UTC-02:00
 
   // Will be used for FakeDate.now()
   // and new FakeDate()
+  // if `null` it'll use the real time
   referenceTime: 0,
 });
 
