@@ -12,7 +12,7 @@ function nativeOffsetAt(d = _Date.now()) {
 
 function fakeDate({
   referenceTime = 0,
-  timezoneOffset = null,
+  timezoneOffset = 0,
 }) {
 
   validateTime(referenceTime, 'referenceTime');
