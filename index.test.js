@@ -174,12 +174,12 @@ describe('fakeDate', () => {
       describe('getTimezoneOffset', () => {
         it('gets the offset defined in factory', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
-          let actual = new FakeDate('2012-01-01T00:00:00.000-02:00').getTimezoneOffset()
-          let expected = 60 * 2
+          let actual = new FakeDate('2012-01-01T00:00:00.000-02:00').getTimezoneOffset();
+          let expected = 60 * 2;
           assert.strictEqual(actual, expected);
           // we do it in summer so that it tests DST when timezone is Europe/Paris
-          actual = new FakeDate('2012-07-01T00:00:00.000-02:00').getTimezoneOffset()
-          expected = 60 * 2
+          actual = new FakeDate('2012-07-01T00:00:00.000-02:00').getTimezoneOffset();
+          expected = 60 * 2;
           assert.strictEqual(actual, expected);
         });
         it('gets the default offset when null given in factory', () => {
