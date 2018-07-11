@@ -3,4 +3,4 @@ declare function fakeDate(options: {
   timezoneOffset?: number | null
 }): typeof Date
 
-export = fakeDate
+export default fakeDate

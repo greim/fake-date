@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = fakeDate;
+Object.defineProperty(exports, '__esModule', {value: true});
+exports.default = fakeDate;
 
 const _global = global || window;
 const _Date = _global.Date;
