@@ -2,7 +2,8 @@
   "name": "fake-date",
   "version": "1.0.1",
   "description": "util for mocking the Date API",
-  "main": "index.js",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "scripts": {
     "test:unit": "mocha index.test.js",
     "test": "TZ=UTC yarn run test:unit && TZ='Asia/Bangkok' yarn run test:unit",
