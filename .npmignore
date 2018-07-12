@@ -1,3 +1,6 @@
 .eslintrc
 .babelrc
 coverage/
+.vscode/
+test/
+src/
