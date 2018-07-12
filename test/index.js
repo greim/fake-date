@@ -1,9 +1,9 @@
 /* eslint-env mocha */
+import assert from 'assert';
+import fakeDate from '..';
 
-'use strict';
-
-const assert = require('assert');
-const fakeDate = require('.');
+const iso = (date) => new Date(date).toISOString();
+const assertIso = (actual, expected) => assert.strictEqual(iso(actual), iso(expected));
 
 describe('fakeDate', () => {
   describe('factory', () => {
@@ -114,13 +114,13 @@ describe('fakeDate', () => {
         const FakeDate = fakeDate({});
         const expected = Date.UTC(1970, 0);
         const actual = FakeDate.UTC(1970, 0);
-        assert.strictEqual(actual, expected);
+        assertIso(actual, expected);
       });
       it('correct modern date', () => {
         const FakeDate = fakeDate({});
         const expected = Date.UTC(2016, 6, 5);
         const actual = FakeDate.UTC(2016, 6, 5);
-        assert.strictEqual(actual, expected);
+        assertIso(actual, expected);
       });
       it('requires multiple args', () => {
         const FakeDate = fakeDate({});
@@ -153,19 +153,19 @@ describe('fakeDate', () => {
         const FakeDate = fakeDate({});
         const actual = FakeDate.parse('2001-01-01');
         const expected = Date.UTC(2001, 0, 1);
-        assert.strictEqual(actual, expected);
+        assertIso(actual, expected);
       });
       it('returns local for Jan 1, 1970', () => {
         const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
         const actual = FakeDate.parse('Jan 1, 1970');
         const expected = Date.parse('1970-01-01T00:00:00.000-02:00');
-        assert.strictEqual(actual, expected);
+        assertIso(actual, expected);
       });
       it('returns UTC for Jan 1, 1970 GMT', () => {
         const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
         const actual = FakeDate.parse('Jan 1, 1970 GMT');
         const expected = Date.parse('1970-01-01T00:00:00.000Z');
-        assert.strictEqual(actual, expected);
+        assertIso(actual, expected);
       });
     });
   });
@@ -776,21 +776,21 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setDate(0);
           const expected = Date.parse('1997-12-31T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets date mid year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-06-15T00:00:00.000-02:00');
           const actual = fd.setDate(16);
           const expected = Date.parse('1998-06-16T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets date last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999-02:00');
           const actual = fd.setDate(32);
           const expected = Date.parse('1999-01-01T23:59:59.999-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets feb 29 in leap year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -817,35 +817,35 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setFullYear(1997);
           const expected = Date.parse('1997-01-01T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets fullYear last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999-02:00');
           const actual = fd.setFullYear(1999);
           const expected = Date.parse('1999-12-31T23:59:59.999-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets fullYear with month', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setFullYear(1999, 3);
           const expected = Date.parse('1999-04-01T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets fullYear with month, day', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setFullYear(1999, 1, 8);
           const expected = Date.parse('1999-02-08T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN does not set to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate(NaN);
           const actual = fd.setFullYear(1999);
           const expected = Date.parse('1999-01-01T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setHours', () => {
@@ -854,21 +854,21 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setHours(-1);
           const expected = Date.parse('1997-12-31T23:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets hours last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999-02:00');
           const actual = fd.setHours(24);
           const expected = Date.parse('1999-01-01T00:59:59.999-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets hours, minutes, seconds, milliseconds', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setHours(10, 5, 7, 123);
           const expected = Date.parse('1998-01-01T10:05:07.123-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -883,14 +883,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setMilliseconds(-1);
           const expected = Date.parse('1997-12-31T23:59:59.999-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets milliseconds last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999-02:00');
           const actual = fd.setMilliseconds(1000);
           const expected = Date.parse('1999-01-01T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -905,14 +905,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setMinutes(-1);
           const expected = Date.parse('1997-12-31T23:59:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets minutes last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999-02:00');
           const actual = fd.setMinutes(60);
           const expected = Date.parse('1999-01-01T00:00:59.999-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -925,7 +925,7 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setMinutes(50, 40, 30);
           const expected = Date.parse('1998-01-01T00:50:40.030-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setMonth', () => {
@@ -934,14 +934,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setMonth(-1);
           const expected = Date.parse('1997-12-01T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets month last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999-02:00');
           const actual = fd.setMonth(12);
           const expected = Date.parse('1999-01-31T23:59:59.999-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -954,7 +954,7 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setMonth(11, 4);
           const expected = Date.parse('1998-12-04T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setSeconds', () => {
@@ -963,14 +963,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setSeconds(-1);
           const expected = Date.parse('1997-12-31T23:59:59.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets seconds last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999-02:00');
           const actual = fd.setSeconds(60);
           const expected = Date.parse('1999-01-01T00:00:00.999-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -983,7 +983,7 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setSeconds(2, 345);
           const expected = Date.parse('1998-01-01T00:00:02.345-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setYear', () => {
@@ -992,21 +992,21 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000-02:00');
           const actual = fd.setYear(97);
           const expected = Date.parse('1997-01-01T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets year last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999-02:00');
           const actual = fd.setYear(99);
           const expected = Date.parse('1999-12-31T23:59:59.999-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate(NaN);
           const actual = fd.setYear(99);
           const expected = Date.parse('1999-01-01T00:00:00.000-02:00');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setUTCDate', () => {
@@ -1015,14 +1015,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCDate(0);
           const expected = Date.parse('1997-12-31T00:00:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets UTC date last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999Z');
           const actual = fd.setUTCDate(32);
           const expected = Date.parse('1999-01-01T23:59:59.999Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets feb 29 in leap year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -1049,28 +1049,28 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCFullYear(1997);
           const expected = Date.parse('1997-01-01T00:00:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets UTC fullYear last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999Z');
           const actual = fd.setUTCFullYear(1999);
           const expected = Date.parse('1999-12-31T23:59:59.999Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate(NaN);
           const actual = fd.setUTCFullYear(1999);
           const expected = Date.parse('1999-01-01T00:00:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets UTC fullYear, month, date', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCFullYear(1997, 10, 9);
           const expected = Date.parse('1997-11-09T00:00:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setUTCHours', () => {
@@ -1079,14 +1079,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCHours(-1);
           const expected = Date.parse('1997-12-31T23:00:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets UTC hours last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999Z');
           const actual = fd.setUTCHours(24);
           const expected = Date.parse('1999-01-01T00:59:59.999Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -1099,7 +1099,7 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCHours(2, 2, 2, 2);
           const expected = Date.parse('1998-01-01T02:02:02.002Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setUTCMilliseconds', () => {
@@ -1108,14 +1108,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCMilliseconds(-1);
           const expected = Date.parse('1997-12-31T23:59:59.999Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets UTC milliseconds last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999Z');
           const actual = fd.setUTCMilliseconds(1000);
           const expected = Date.parse('1999-01-01T00:00:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -1130,14 +1130,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCMinutes(-1);
           const expected = Date.parse('1997-12-31T23:59:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets UTC minutes last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999Z');
           const actual = fd.setUTCMinutes(60);
           const expected = Date.parse('1999-01-01T00:00:59.999Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -1150,7 +1150,7 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCMinutes(3, 4, 5);
           const expected = Date.parse('1998-01-01T00:03:04.005Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setUTCMonth', () => {
@@ -1159,14 +1159,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCMonth(-1);
           const expected = Date.parse('1997-12-01T00:00:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets UTC month last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999Z');
           const actual = fd.setUTCMonth(12);
           const expected = Date.parse('1999-01-31T23:59:59.999Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -1179,7 +1179,7 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCMonth(9, 11);
           const expected = Date.parse('1998-10-11T00:00:00.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
       describe('setUTCSeconds', () => {
@@ -1188,14 +1188,14 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCSeconds(-1);
           const expected = Date.parse('1997-12-31T23:59:59.000Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('sets UTC seconds last milli of year', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
           const fd = new FakeDate('1998-12-31T23:59:59.999Z');
           const actual = fd.setUTCSeconds(60);
           const expected = Date.parse('1999-01-01T00:00:00.999Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
         it('NaN sets to NaN', () => {
           const FakeDate = fakeDate({ timezoneOffset: 60 * 2 });
@@ -1208,7 +1208,7 @@ describe('fakeDate', () => {
           const fd = new FakeDate('1998-01-01T00:00:00.000Z');
           const actual = fd.setUTCSeconds(22, 33);
           const expected = Date.parse('1998-01-01T00:00:22.033Z');
-          assert.strictEqual(actual, expected);
+          assertIso(actual, expected);
         });
       });
     });

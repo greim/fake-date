@@ -1,18 +1,10 @@
-'use strict';
-
-module.exports = fakeDate;
-Object.defineProperty(exports, '__esModule', {value: true});
-exports.default = fakeDate;
-
-const _global = global || window;
-const _Date = _global.Date;
+const _Date = global.Date;
 // using a function as it may varies depending on DST
 function nativeOffsetAt(d = _Date.now()) {
   return new _Date(d).getTimezoneOffset();
 }
 
-
-function fakeDate({
+export default function fakeDate({
   referenceTime = 0,
   timezoneOffset = 0,
 }) {
@@ -21,6 +13,9 @@ function fakeDate({
   validateTime(timezoneOffset, 'timezoneOffset');
 
   function tzOffsetMillisFor(d) {
+    if (!isFinite(d)) {
+      return 0;
+    }
     if (timezoneOffset === null) {
       return 0;
     }
@@ -151,7 +146,7 @@ function fakeDate({
       const offsetMs = tzOffsetMillisFor(+date);
       const fudge = new _Date(+date - offsetMs);
       fudge[method](...args);
-      date.setTime(+fudge + (isNaN(offsetMs) ? tzOffsetMillisFor(+fudge) : offsetMs));
+      date.setTime(+fudge + tzOffsetMillisFor(+fudge));
       return date.getTime();
     };
   }

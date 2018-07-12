@@ -1,16 +1,13 @@
 {
   "env": {
-    "es6": true,
-    "node": 1
+    "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "globals": {
-    "window": true,
-    "document": true,
-    "location": true,
-    "fetch": true
+    "global": true
   },
   "rules": {
     // Possible Errors

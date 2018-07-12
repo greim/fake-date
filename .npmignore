@@ -1,2 +1,5 @@
-index.test.js
+src/
+test/
 .eslintrc
+.babelrc
+coverage/

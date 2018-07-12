@@ -2,12 +2,14 @@
   "name": "fake-date",
   "version": "1.0.1",
   "description": "util for mocking the Date API",
-  "main": "./index.js",
+  "main": "./lib/index.js",
   "types": "./index.d.ts",
   "scripts": {
-    "test:unit": "mocha index.test.js",
-    "test": "TZ=UTC yarn run test:unit && TZ='Asia/Bangkok' yarn run test:unit",
-    "lint": "eslint index.js index.test.js"
+    "build": "babel src -d lib",
+    "prepublish": "yarn build",
+    "test:unit": "mocha --require babel-core/register test/**/*.js",
+    "test": "yarn build && TZ=UTC yarn run test:unit && TZ='Asia/Bangkok' yarn run test:unit",
+    "lint": "eslint src/**/*.js test/**/*.js"
   },
   "keywords": [
     "date",
@@ -25,6 +27,9 @@
   "author": "Greg Reimer <gregreimer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "eslint": "^5.1.0",
     "mocha": "^5.2.0"
   }

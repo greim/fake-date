@@ -1,0 +1,11 @@
+{
+  "eslint.enable": false,
+  "cSpell.words": [
+    "Millis"
+  ],
+  "mocha.files.glob": "test/**/*.js",
+  "mocha.requires": [
+    "babel-core/register"
+  ],
+  "mocha.path": "node_modules/mocha"
+}
