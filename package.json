@@ -6,9 +6,9 @@
   "types": "./index.d.ts",
   "scripts": {
     "build": "babel src -d lib",
-    "prepublish": "yarn build",
+    "prepublish": "npm run --silent build",
     "test:unit": "mocha --require babel-core/register test/**/*.js",
-    "test": "yarn build && TZ=UTC yarn run test:unit && TZ='Asia/Bangkok' yarn run test:unit",
+    "test": "npm run build && TZ=UTC npm run test:unit && TZ='Asia/Bangkok' npm run test:unit",
     "lint": "eslint src/**/*.js test/**/*.js"
   },
   "keywords": [
