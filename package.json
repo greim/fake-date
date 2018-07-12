@@ -2,19 +2,35 @@
   "name": "fake-date",
   "version": "1.0.1",
   "description": "util for mocking the Date API",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "types": "./index.d.ts",
   "scripts": {
-    "test": "mocha $(find . -name \"*.test.js\")"
+    "build": "babel src -d lib",
+    "prepublish": "npm run --silent build",
+    "test:unit": "mocha --require babel-core/register test/**/*.js",
+    "test": "npm run build && TZ=UTC npm run test:unit && TZ='Asia/Bangkok' npm run test:unit",
+    "lint": "eslint src/**/*.js test/**/*.js"
   },
   "keywords": [
     "date",
     "time",
     "test"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greim/fake-date.git"
+  },
+  "bugs": {
+    "url": "https://github.com/greim/fake-date/issues"
+  },
+  "homepage": "https://github.com/greim/fake-date#readme",
   "author": "Greg Reimer <gregreimer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^3.12.2",
-    "mocha": "^3.2.0"
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
+    "eslint": "^5.1.0",
+    "mocha": "^5.2.0"
   }
 }

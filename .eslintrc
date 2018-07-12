@@ -1,27 +1,15 @@
 {
   "env": {
-    "es6": true,
-    "node": 1
+    "es6": true
   },
   "parserOptions": {
-    "ecmaFeatures": { "jsx": true },
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "globals": {
-    "window": true,
-    "document": true,
-    "location": true,
-    "fetch": true,
+    "global": true
   },
   "rules": {
-
-    "react/jsx-uses-react": "error",
-    "react/jsx-uses-vars": "error",
-    "react/jsx-no-undef": "error",
-    "react/react-in-jsx-scope": "error",
-    "react/no-unknown-property": "error",
-    "react/forbid-component-props": ["error", { "forbid": ["class"] }],
-
     // Possible Errors
 
     no-cond-assign: 1, // disallow assignment operators in conditional expressions
@@ -102,7 +90,7 @@
     no-proto: 1, // disallow the use of the __proto__ property
     no-redeclare: 1, // disallow var redeclaration
     no-return-assign: 1, // disallow assignment operators in return statements
-    no-script-url: 1, // disallow javascript: 0, // urls
+    no-script-url: 1, // disallow javascript urls
     no-self-assign: 1, // disallow assignments where both sides are exactly the same
     no-self-compare: 1, // disallow comparisons where both sides are exactly the same
     no-sequences: 1, // disallow comma operators
@@ -230,8 +218,5 @@
     spaced-comment: 0, // enforce consistent spacing after the // or /* in a comment
     unicode-bom: 0, // require or disallow the Unicode BOM
     wrap-regex: 0 // require parenthesis around regex literals
-  },
-  "plugins": [
-    "react"
-  ]
+  }
 }

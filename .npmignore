@@ -1,2 +1,6 @@
-index.test.js
 .eslintrc
+.babelrc
+coverage/
+.vscode/
+test/
+src/
